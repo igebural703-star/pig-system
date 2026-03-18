@@ -5,8 +5,8 @@ import time
 
 app = Flask(__name__)
 
-TOKEN = "你的TOKEN"
-CHAT_ID = "你的ID"
+TOKEN = "8773362725:AAFXLxxSEjk_76eqm2RdcokPDqHW5Xgk-PA"
+CHAT_ID = "8554981205"
 
 last_signal = None
 
