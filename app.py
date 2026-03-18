@@ -1,23 +1,21 @@
 import requests
-from flask import Flask
-import threading
-import time
+from flask import Flask, jsonify
 
 app = Flask(__name__)
+last_signal = None
 
 TOKEN = "8773362725:AAFXLxxSEjk_76eqm2RdcokPDqHW5Xgk-PA"
 CHAT_ID = "8554981205"
-
-last_signal = None
 
 def send(msg):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
     requests.get(url, params={"chat_id": CHAT_ID, "text": msg})
 
 def get_price():
-    return 12  # 后面再换真实数据
+    return 12  # 先用固定值，后面再升级
 
-def check():
+@app.route("/")
+def run():
     global last_signal
 
     price = get_price()
@@ -33,25 +31,6 @@ def check():
         send(f"猪周期信号：{signal}")
         last_signal = signal
 
-    return price, signal
-
-# 👇 后台循环（自动运行）
-def loop():
-    while True:
-        check()
-        time.sleep(300)
-
-# 👇 网页显示（解决空白）
-@app.route("/")
-def home():
-    price, signal = check()
-    return f"""
-    <h1>🐷 猪周期系统</h1>
-    <p>当前猪价：{price}</p>
-    <p>当前信号：{signal}</p>
-    """
-
-# 启动后台线程
-threading.Thread(target=loop).start()
+    return {"price": price, "signal": signal}
 
 app.run(host="0.0.0.0", port=10000)
